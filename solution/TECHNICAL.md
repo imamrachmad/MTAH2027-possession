@@ -19,7 +19,7 @@ counted in frames of evidence.
 | team mean speed below 1.6 m/s (smoothed ±1 s) | in a stoppage everyone walks | +2 per m/s, clipped ±3 |
 | ball faster than 6 m/s on the pitch, nothing pending | a moving ball is in play | −1 |
 
-Switching cost: 40.
+Alive/dead switching cost: 40 frames (`dead_switch_cost`).
 
 **Restart detection.** A *restart kick* is when the ball starts moving on the pitch (> 4 m/s for
 ≥ 3 frames) after about 1 s of a **still or unseen** ball (median speed < 2 m/s: placed for a
@@ -87,3 +87,19 @@ structure, with no labels involved: 104 stoppages (median 21 s), 289 possessions
 - With more time: fit the per-frame emissions on public tracking data from **other** games;
   recover the ball inside long gaps from player motion; map the broadcast feed to tactical frames
   and use its close-ups for the occluded ball.
+
+## 7. Reproduction
+
+```bash
+pip install -r requirements.txt
+# Unpack the match bundle into ./data (see data/README.md), or set MTAH_DATA_DIR
+python solution/possession.py --name <team_name>
+# -> evaluation/results/<team_name>.csv (199,319 rows)
+```
+
+To validate and score against the public ground truth:
+
+```bash
+python evaluation/validate_submission.py evaluation/results/<team_name>.csv
+python evaluation/run_evaluation.py
+```
